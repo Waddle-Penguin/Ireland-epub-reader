@@ -35,7 +35,7 @@
       console.error("epub.js failed to load");
     }
 
-    const book = ePub("./book.epub");
+    const book = ePub("https://s3.amazonaws.com/moby-dick/moby-dick.epub");
 
     const rendition = book.renderTo("viewer", {
       width: "100%",
