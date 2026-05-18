@@ -1,9 +1,33 @@
 <!DOCTYPE html>
-const book = ePub("./book.epub");
+<html>
+<head>
+  <meta charset="utf-8" />
+  <script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
 
-const rendition = book.renderTo("viewer", {
-  width: "100%",
-  height: "100%"
-});
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+    }
+    #viewer {
+      width: 100%;
+      height: 100vh;
+    }
+  </style>
+</head>
 
-rendition.display();
+<body>
+  <div id="viewer"></div>
+
+  <script>
+    const book = ePub("./book.epub");
+
+    const rendition = book.renderTo("viewer", {
+      width: "100%",
+      height: "100%"
+    });
+
+    rendition.display();
+  </script>
+</body>
+</html>
