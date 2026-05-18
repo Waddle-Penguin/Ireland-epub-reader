@@ -5,13 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>EPUB Reader</title>
 
-  <!-- LOCAL epub.js (must be downloaded into your repo) -->
   <script src="./epub.min.js"></script>
 
   <style>
     html, body {
       margin: 0;
-      padding: 0;
       height: 100%;
       overflow: hidden;
     }
@@ -34,7 +32,14 @@
       height: "100%"
     });
 
-    rendition.display();
+    // IMPORTANT: wait for book readiness before rendering first page
+    book.ready
+      .then(() => {
+        return rendition.display();
+      })
+      .catch(err => {
+        console.error("EPUB failed to render:", err);
+      });
   </script>
 </body>
 </html>
