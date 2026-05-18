@@ -2,13 +2,21 @@
 <html>
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>EPUB Reader</title>
+
+  <!-- epub.js -->
   <script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
 
   <style>
     html, body {
       margin: 0;
+      padding: 0;
       height: 100%;
+      overflow: hidden;
     }
+
     #viewer {
       width: 100%;
       height: 100vh;
@@ -20,6 +28,7 @@
   <div id="viewer"></div>
 
   <script>
+    // IMPORTANT: path relative to repo root on GitHub Pages
     const book = ePub("./book.epub");
 
     const rendition = book.renderTo("viewer", {
