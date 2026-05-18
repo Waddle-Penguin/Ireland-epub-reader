@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>EPUB Reader</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js"></script>
+  <!-- LOCAL epub.js (must be downloaded into your repo) -->
+  <script src="./epub.min.js"></script>
 
   <style>
     html, body {
@@ -28,14 +29,12 @@
   <script>
     const book = ePub("./book.epub");
 
-    book.opened.then(() => {
-      const rendition = book.renderTo("viewer", {
-        width: "100%",
-        height: "100%"
-      });
-
-      rendition.display();
+    const rendition = book.renderTo("viewer", {
+      width: "100%",
+      height: "100%"
     });
+
+    rendition.display();
   </script>
 </body>
 </html>
