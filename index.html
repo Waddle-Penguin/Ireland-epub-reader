@@ -3,11 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
   <title>EPUB Reader</title>
 
-  <!-- epub.js MUST load before your script -->
-<script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js"></script>
 
   <style>
     html, body {
@@ -25,31 +23,17 @@
 </head>
 
 <body>
-
-  <!-- This MUST exist before JS runs -->
   <div id="viewer"></div>
 
   <script>
-    // Safety check (helps debug instantly if something breaks)
-    if (typeof ePub === "undefined") {
-      console.error("epub.js failed to load");
-    }
-
-    const book = ePub("https://s3.amazonaws.com/moby-dick/moby-dick.epub");
+    const book = ePub("./book.epub");
 
     const rendition = book.renderTo("viewer", {
       width: "100%",
       height: "100%"
     });
 
-    rendition.display()
-      .then(() => {
-        console.log("EPUB rendered successfully");
-      })
-      .catch(err => {
-        console.error("EPUB render error:", err);
-      });
+    rendition.display();
   </script>
-
 </body>
 </html>
