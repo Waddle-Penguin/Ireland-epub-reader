@@ -3,34 +3,99 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>EPUB Reader</title>
+  <title>EPUB Viewer (No epub.js)</title>
 
-  <script src="./epub.min.js"></script>
+  <script src="./jszip.min.js"></script>
 
   <style>
     html, body {
       margin: 0;
       height: 100%;
       overflow: hidden;
+      font-family: sans-serif;
+    }
+
+    #controls {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 10;
+      background: rgba(0,0,0,0.7);
+      padding: 8px;
+      border-radius: 8px;
+    }
+
+    button {
+      color: white;
+      background: #333;
+      border: none;
+      padding: 6px 10px;
+      margin: 2px;
+      cursor: pointer;
     }
 
     #viewer {
       width: 100%;
       height: 100vh;
+      border: none;
     }
   </style>
 </head>
 
 <body>
 
-<div id="viewer"></div>
+<div id="controls">
+  <button onclick="prev()">◀</button>
+  <button onclick="next()">▶</button>
+</div>
+
+<iframe id="viewer"></iframe>
 
 <script>
-  fetch("./book.epub")
-    .then(r => r.arrayBuffer())
-    .then(buf => {
-      console.log("EPUB size:", buf.byteLength);
-    });
+let pages = [];
+let index = 0;
+
+async function loadEPUB() {
+  const resp = await fetch("./book.epub");
+  const buffer = await resp.arrayBuffer();
+
+  const zip = await JSZip.loadAsync(buffer);
+
+  // collect HTML files inside EPUB
+  const files = Object.keys(zip.files)
+    .filter(f => f.endsWith(".html") || f.endsWith(".xhtml"))
+    .sort();
+
+  for (const file of files) {
+    const content = await zip.files[file].async("text");
+    pages.push(content);
+  }
+
+  render();
+}
+
+function render() {
+  if (!pages.length) return;
+
+  const iframe = document.getElementById("viewer");
+  iframe.srcdoc = pages[index];
+}
+
+function next() {
+  if (index < pages.length - 1) {
+    index++;
+    render();
+  }
+}
+
+function prev() {
+  if (index > 0) {
+    index--;
+    render();
+  }
+}
+
+loadEPUB();
 </script>
 
 </body>
