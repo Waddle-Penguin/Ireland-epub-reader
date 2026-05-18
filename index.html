@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EPUB Reader</title>
 
   <script src="./epub.min.js"></script>
 
@@ -10,6 +11,7 @@
     html, body {
       margin: 0;
       height: 100%;
+      overflow: hidden;
     }
 
     #viewer {
@@ -31,7 +33,17 @@
     height: "100%"
   });
 
-  rendition.display();
+  // HARD FORCE FIRST CHAPTER DISPLAY
+  book.ready
+    .then(() => {
+      return book.locations.generate(100); // ensures spine indexing
+    })
+    .then(() => {
+      return rendition.display(0); // explicitly render first spine item
+    })
+    .catch(err => {
+      console.error("Render error:", err);
+    });
 </script>
 
 </body>
