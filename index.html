@@ -1,36 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <script src="./epub.min.js"></script>
 
   <style>
-    html, body { margin:0; height:100%; }
-    #viewer { height:100vh; }
+    html, body {
+      margin: 0;
+      height: 100%;
+    }
+
+    #viewer {
+      width: 100%;
+      height: 100vh;
+    }
   </style>
 </head>
 
 <body>
+
 <div id="viewer"></div>
 
 <script>
-  const url = "https://s3.amazonaws.com/moby-dick/moby-dick.epub";
-
-  const book = ePub(url);
-
-  book.loaded
-    .then(() => console.log("LOADED OK"))
-    .catch(err => console.error("LOAD FAIL", err));
+  const book = ePub("./book.epub");
 
   const rendition = book.renderTo("viewer", {
     width: "100%",
     height: "100%"
   });
 
-  rendition.display()
-    .then(() => console.log("RENDER OK"))
-    .catch(err => console.error("RENDER FAIL", err));
+  rendition.display();
 </script>
 
 </body>
