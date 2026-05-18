@@ -1,27 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>EPUB ZIP Debug</title>
-
-  <!-- JSZip (required for inspection) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
-</head>
-
-<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <script>
-fetch("./book.epub")
+fetch("./book.epub", { cache: "no-store" })
   .then(r => r.arrayBuffer())
-  .then(buffer => JSZip.loadAsync(buffer))
-  .then(zip => {
-    console.log("FIRST FILES INSIDE EPUB:");
-    console.log(Object.keys(zip.files).slice(0, 50));
+  .then(buffer => {
+    console.log("Downloaded size:", buffer.byteLength);
+    return JSZip.loadAsync(buffer);
   })
-  .catch(err => console.error("ZIP ERROR:", err));
+  .then(zip => {
+    console.log("ZIP OK. Files:");
+    console.log(Object.keys(zip.files).slice(0, 30));
+  })
+  .catch(err => console.error("ZIP FAIL:", err));
 </script>
-
-</body>
-</html>
