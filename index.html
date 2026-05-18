@@ -1,45 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>EPUB Reader</title>
+  <meta charset="utf-8">
 
-  <script src="./epub.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js"></script>
 
   <style>
-    html, body {
-      margin: 0;
-      height: 100%;
-      overflow: hidden;
-    }
-
-    #viewer {
-      width: 100%;
-      height: 100vh;
-    }
+    html, body { margin:0; height:100%; }
+    #viewer { height:100vh; }
   </style>
 </head>
 
 <body>
-  <div id="viewer"></div>
+<div id="viewer"></div>
 
-  <script>
-    const book = ePub("./book.epub");
+<script>
+  const url = "https://s3.amazonaws.com/moby-dick/moby-dick.epub";
 
-    const rendition = book.renderTo("viewer", {
-      width: "100%",
-      height: "100%"
-    });
+  const book = ePub(url);
 
-    // IMPORTANT: wait for book readiness before rendering first page
-    book.ready
-      .then(() => {
-        return rendition.display();
-      })
-      .catch(err => {
-        console.error("EPUB failed to render:", err);
-      });
-  </script>
+  book.loaded
+    .then(() => console.log("LOADED OK"))
+    .catch(err => console.error("LOAD FAIL", err));
+
+  const rendition = book.renderTo("viewer", {
+    width: "100%",
+    height: "100%"
+  });
+
+  rendition.display()
+    .then(() => console.log("RENDER OK"))
+    .catch(err => console.error("RENDER FAIL", err));
+</script>
+
 </body>
 </html>
