@@ -13,7 +13,7 @@
   <div id="viewer"></div>
 
   <script>
-    const book = ePub("book.epub");
+    const book = ePub("./book.epub");
 
     book.loaded.navigation.then(() => {
       const rendition = book.renderTo("viewer", {
