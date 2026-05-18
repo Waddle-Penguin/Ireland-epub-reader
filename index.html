@@ -26,23 +26,10 @@
 <div id="viewer"></div>
 
 <script>
-  const book = ePub("./book.epub");
-
-  const rendition = book.renderTo("viewer", {
-    width: "100%",
-    height: "100%"
-  });
-
-  // HARD FORCE FIRST CHAPTER DISPLAY
-  book.ready
-    .then(() => {
-      return book.locations.generate(100); // ensures spine indexing
-    })
-    .then(() => {
-      return rendition.display(0); // explicitly render first spine item
-    })
-    .catch(err => {
-      console.error("Render error:", err);
+  fetch("./book.epub")
+    .then(r => r.arrayBuffer())
+    .then(buf => {
+      console.log("EPUB size:", buf.byteLength);
     });
 </script>
 
