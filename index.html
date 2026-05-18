@@ -1,15 +1,112 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EPUB Viewer</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+
+    #controls {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 10;
+      background: rgba(0,0,0,0.7);
+      padding: 8px;
+      border-radius: 8px;
+    }
+
+    button {
+      color: white;
+      background: #333;
+      border: none;
+      padding: 6px 10px;
+      margin: 2px;
+      cursor: pointer;
+    }
+
+    #viewer {
+      width: 100%;
+      height: 100vh;
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="controls">
+  <button onclick="prev()">◀</button>
+  <button onclick="next()">▶</button>
+</div>
+
+<iframe id="viewer"></iframe>
 
 <script>
-fetch("./book.epub", { cache: "no-store" })
-  .then(r => r.arrayBuffer())
-  .then(buffer => {
-    console.log("Downloaded size:", buffer.byteLength);
-    return JSZip.loadAsync(buffer);
-  })
-  .then(zip => {
-    console.log("ZIP OK. Files:");
-    console.log(Object.keys(zip.files).slice(0, 30));
-  })
-  .catch(err => console.error("ZIP FAIL:", err));
+let pages = [];
+let index = 0;
+
+async function loadEPUB() {
+  // IMPORTANT: absolute GitHub Pages path
+  const url = "/Ireland-epub-reader/book.epub";
+
+  const resp = await fetch(url, { cache: "no-store" });
+
+  if (!resp.ok) {
+    throw new Error("Failed to fetch EPUB: " + resp.status);
+  }
+
+  const buffer = await resp.arrayBuffer();
+
+  console.log("Downloaded EPUB size:", buffer.byteLength);
+
+  const zip = await JSZip.loadAsync(buffer);
+
+  const files = Object.keys(zip.files)
+    .filter(f => f.endsWith(".html") || f.endsWith(".xhtml"))
+    .sort();
+
+  console.log("EPUB HTML files:", files);
+
+  for (const file of files) {
+    const content = await zip.files[file].async("text");
+    pages.push(content);
+  }
+
+  render();
+}
+
+function render() {
+  if (!pages.length) return;
+
+  document.getElementById("viewer").srcdoc = pages[index];
+}
+
+function next() {
+  if (index < pages.length - 1) {
+    index++;
+    render();
+  }
+}
+
+function prev() {
+  if (index > 0) {
+    index--;
+    render();
+  }
+}
+
+loadEPUB().catch(err => console.error(err));
 </script>
+
+</body>
+</html>
