@@ -1,12 +1,9 @@
-<script>
-  const book = ePub("./book.epub");
+<!DOCTYPE html>
+const book = ePub("./book.epub");
 
-  book.ready.then(() => {
-    const rendition = book.renderTo("viewer", {
-      width: "100%",
-      height: "100%"
-    });
+const rendition = book.renderTo("viewer", {
+  width: "100%",
+  height: "100%"
+});
 
-    rendition.display();
-  });
-</script>
+rendition.display();
